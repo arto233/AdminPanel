@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class UserDao {
 
-    private static final String CREATE_USER_QUERY = "INSERT INTO users(username, email, password) VALUES (?,?,?)";
-    private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id=?";
-    private static final String UPDATE_USER_QUERY = "UPDATE users SET username=?, email=?,password=? WHERE id =?";
-    private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=?";
-    private static final String FIND_ALL_USERS_QUERY = "SELECT * FROM users";
+    private static final String CREATE_USER_QUERY = "INSERT INTO users(username, email, password) VALUES (?, ?, ?);";
+    private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id=?;";
+    private static final String UPDATE_USER_QUERY = "UPDATE users SET username=?, email=?,password=? WHERE id =?;";
+    private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=?;";
+    private static final String FIND_ALL_USERS_QUERY = "SELECT * FROM users;";
 
     public User create(User user) {
         try (Connection conn = DbUtil.getConnection()) {
@@ -23,6 +23,7 @@ public class UserDao {
             statement.setString(2, user.getEmail());
             statement.setString(3, hashPassword(user.getPassword()));
             statement.executeUpdate();
+
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 user.setId(resultSet.getInt(1));
@@ -80,7 +81,7 @@ public class UserDao {
         }
     }
 
-    public ArrayList<User> readALl() {
+    public ArrayList<User> readAll() {
         try(Connection conn = DbUtil.getConnection()) {
             ArrayList<User> users = new ArrayList<>();
             PreparedStatement statement =
