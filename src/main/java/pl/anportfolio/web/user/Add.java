@@ -11,7 +11,8 @@ import java.io.IOException;
 @WebServlet("/user/add")
 public class Add extends HttpServlet {
 
-    private UserDao userDao = new UserDao();
+    private final UserDao userDao = new UserDao();
+    private final String EMAIL_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,8 +25,13 @@ public class Add extends HttpServlet {
         String userName = request.getParameter("userName");
         String userEmail = request.getParameter("userEmail");
         String userPassword = request.getParameter("userPassword");
-        User user = new User(userName, userEmail, userPassword);
-        userDao.create(user);
-        response.sendRedirect("/user/list");
+        if (userName != null && !userName.isEmpty() && userEmail.matches(EMAIL_REGEX) &&
+        userPassword != null && !userPassword.isEmpty()) {
+            User user = new User(userName, userEmail, userPassword);
+            userDao.create(user);
+            response.sendRedirect("/user/list");
+        } else {
+            response.sendRedirect("/user/add");
+        }
     }
 }
